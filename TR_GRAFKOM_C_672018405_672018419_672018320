@@ -2,49 +2,47 @@
 #include <iostream>
 #include <GL/glut.h>
 #include <math.h>
+#define deltat .001
 #define M_PI 3.14
+
+	GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
+	GLfloat mat_shininess[] = { 50.0 };
+	GLfloat light_position[] = {1.0, 1.0, 0.0, 1.0};
+	GLfloat light_diffuse[] = {1.0, 1.0, 1.0, 1.0};
+	GLfloat light_specular[] = {1.0, 1.0, 1.0, 1.0};
 
 void myinit(void);
 void display(void);
 void keyboard(unsigned char, int, int);
+void mouse(int,int,int,int);
 void ukuran(int, int);
 void ujung_atas(double,int); 
 int is_depth;
 
 void mouse(int btn, int state, int x, int y) {
-	if (state == GLUT_DOWN) {
 		switch (btn) {
+			if (state == GLUT_DOWN) {
 		case GLUT_LEFT_BUTTON:
 			glRotatef(-2.0, 0.0, 1.0, 0.0);
 			break;
 		case GLUT_RIGHT_BUTTON:
 			glRotatef(2.0, 0.0, 1.0, 0.0);
 			break;
-		case GLUT_MIDDLE_BUTTON:
-			if (is_depth) {
-				is_depth = 0;
-				glDisable(GL_DEPTH_TEST);
-			}
-			else {
-				is_depth = 1;
-				glEnable(GL_DEPTH_TEST);
-			}
-			break;
-		case 3:  
+		case 3:
 			glRotatef(-2.0, 1.0, 0.0, 0.0);
-			break;
+		break;
 		case 4:
-			 glRotatef(2.0, 1.0, 0.0, 0.0);
-			break;
-		default:
-			break;
+			glRotatef(2.0, 1.0, 0.0, 0.0);
+		break;
 		}
+
 	}
-	glutPostRedisplay();
+	display();
 }
 void body(void) {
 	glBegin(GL_QUADS);
 	//body dasar
+
 	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
 	glVertex3f(20, 15, 60);
 	glVertex3f(20, 15, 140);
@@ -147,7 +145,7 @@ void ujung_atas(double r, int vertex){
 	double ngon = (double)vertex;
 	//atas
 	glBegin(GL_POLYGON);
-	glColor3f(0.5, 0.5, 0.5);
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
 		for (int i = 0; i < vertex; i++) {
 			double x = r * cos(2 * M_PI * i / ngon)+95;
 			double y = ((r + (i * 0.00001)) * sin(2 * M_PI * i / ngon)) + 75;
@@ -688,6 +686,7 @@ void pengendali(void){
 }
 void bawah(double r, int vertex) {
 	glBegin(GL_QUADS);
+	double ngon = (double)vertex;
 	//bawah
 	glColor4f(91 / 255.0f, 86 / 255.0f, 76 / 255.0f, 100 / 255.0f);
 	glVertex3f(60, 7, 90);
@@ -750,9 +749,146 @@ void bawah(double r, int vertex) {
 	glVertex3f(80, 3, 125);
 	glVertex3f(80, 7, 125);
 	glVertex3f(60, 7, 125);
+	glEnd();
 
 	//kaki kiri
-	glColor4f(91 / 255.0f, 86 / 255.0f, 76 / 255.0f, 100 / 255.0f);
+	//pinggir atas
+	glBegin(GL_POLYGON);
+	glColor3f(0.0, 0.0, 0.0);
+	for (int i = 0; i < vertex; i++) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 40;
+		double y = (r * sin(2 * M_PI * i / ngon));
+		if (x < 41) {
+			glVertex3f(x, y, 125);
+		}
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < vertex; i++) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 40;
+		double y = (r * sin(2 * M_PI * i / ngon));
+		if (x < 41) {
+			glVertex3f(x, y, 145);
+		}
+	}
+	glEnd();
+	//tengah
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < vertex; i++) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 40;
+		double y = (r * sin(2 * M_PI * i / ngon));
+		if (x < 41) {
+			if (y < 1) {
+				glVertex3f(x, y, 125);
+			}
+		}
+	}glVertex3f(30, 0, 145);
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < vertex; i++) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 40;
+		double y = (r * sin(2 * M_PI * i / ngon));
+		if (x < 41) {
+			if (y > -1) {
+				glVertex3f(x, y, 125);
+			}
+		}
+	}glVertex3f(30, 0, 145);
+	glEnd();
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < vertex; i++) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 40;
+		double y = (r * sin(2 * M_PI * i / ngon));
+		if (x < 41) {
+			if (y < 1) {
+				glVertex3f(x, y, 145);
+			}
+		}
+	}glVertex3f(40, -10, 125);
+	glEnd();
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < vertex; i++) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 40;
+		double y = (r * sin(2 * M_PI * i / ngon));
+		if (x < 41) {
+			if (y > -1) {
+				glVertex3f(x, y, 145);
+			}
+		}
+	}glVertex3f(40, 10, 125);
+	glEnd();
+	//pinggir bawah
+	glBegin(GL_POLYGON);
+	glColor3f(0.0, 0.0, 0.0);
+	for (int i = 0; i < vertex; i++) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 100;
+		double y = (r * sin(2 * M_PI * i / ngon));
+		if (x > 99) {
+			glVertex3f(x, y, 125);
+		}
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < vertex; i++) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 100;
+		double y = (r * sin(2 * M_PI * i / ngon));
+		if (x > 99) {
+			glVertex3f(x, y, 145);
+		}
+	}
+	glEnd();
+	//tengah
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < vertex; i++) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 100;
+		double y = (r * sin(2 * M_PI * i / ngon));
+		if (x > 99) {
+			if (y < -1) {
+				glVertex3f(x, y, 145);
+			}
+		}
+	}glVertex3f(100, -10, 125);
+	glEnd();
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < vertex; i++) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 100;
+		double y = (r * sin(2 * M_PI * i / ngon));
+		if (x > 99) {
+			if (y > -1) {
+				glVertex3f(x, y, 145);
+			}
+		}
+	}glVertex3f(100, 10, 125);
+	glEnd();
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < vertex; i++) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 100;
+		double y = (r * sin(2 * M_PI * i / ngon));
+		if (x > 99) {
+			if (y > -1) {
+				glVertex3f(x, y, 125);
+			}
+		}
+	}glVertex3f(110, 0, 145);
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < vertex; i++) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 100;
+		double y = (r * sin(2 * M_PI * i / ngon));
+		if (x > 99) {
+			if (y < -1) {
+				glVertex3f(x, y, 125);
+			}
+		}
+	}glVertex3f(110, 0, 145);
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	glColor4f(0/ 255.0f, 0/ 255.0f, 0/ 255.0f, 100 / 255.0f);
 	glVertex3f(40, -10, 55);
 	glVertex3f(40, -10, 75);
 	glVertex3f(100, -10, 75);
@@ -784,102 +920,141 @@ void bawah(double r, int vertex) {
 	glVertex3f(40, 10, 75);
 	glEnd();
 	//kaki kanan
-	double ngon = (double)vertex;
+	
 	//pinggir
 	glBegin(GL_POLYGON);
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3f(0.0, 0.0, 0.0);
 	for (int i = 0; i < vertex; i++) {
-		double x = (r * cos(2 * M_PI * i / ngon)) + 30;
-		double y = (r * sin(2 * M_PI * i / ngon)) + 10;
-		if (x < 31) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 40;
+		double y = (r * sin(2 * M_PI * i / ngon)) ;
+		if (x < 41) {
 			glVertex3f(x, y, 55);
 		}
-	}glVertex3f(30, 5, 55);
+	}
 	glEnd();
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < vertex; i++) {
-		double x = (r * cos(2 * M_PI * i / ngon)) + 30;
-		double y = (r * sin(2 * M_PI * i / ngon) )+ 10;
-		if (x < 31) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 40;
+		double y = (r * sin(2 * M_PI * i / ngon));
+		if (x < 41) {
 			glVertex3f(x, y, 75);
 		}
-	}glVertex3f(30, 5, 75);
+	}
 	glEnd();
 	//tengah
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < vertex; i++) {
-		double x = (r * cos(2 * M_PI * i / ngon)) + 30;
-		double y = (r * sin(2 * M_PI * i / ngon)) + 10;
-		if (x <= 30) {
-			if (y > 4) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 40;
+		double y = (r * sin(2 * M_PI * i / ngon)) ;
+		if (x < 41) {
+			if (y > -1) {
 				glVertex3f(x, y, 55);
 			}
 		}
-	}glVertex3f(25, 5, 75);
+	}glVertex3f(30, 0, 75);
 	glEnd();
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < vertex; i++) {
-		double x = (r * cos(2 * M_PI * i / ngon)) + 30;
-		double y = (r * sin(2 * M_PI * i / ngon)) + 10;
-		if (x <= 30) {
-			if (y < 6) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 40;
+		double y = (r * sin(2 * M_PI * i / ngon)) ;
+		if (x < 41) {
+			if (y < 1) {
 				glVertex3f(x, y, 55);
 			}
 		}
-	}glVertex3f(25, 5, 75);
+	}glVertex3f(30, 0, 75);
 	glEnd();
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < vertex; i++) {
-		double x = (r * cos(2 * M_PI * i / ngon)) + 30;
-		double y = (r * sin(2 * M_PI * i / ngon)) + 10;
-		if (x < 31) {
-			if (y > 4) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 40;
+		double y = (r * sin(2 * M_PI * i / ngon)) ;
+		if (x < 41) {
+			if (y > -1) {
 				glVertex3f(x, y, 75);
 			}
 		}
-	}glVertex3f(30, 10, 55);
+	}glVertex3f(40, 10, 55);
 	glEnd();
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < vertex; i++) {
-		double x = (r * cos(2 * M_PI * i / ngon)) + 30;
-		double y = (r * sin(2 * M_PI * i / ngon)) + 10;
-		if (x < 31) {
-			if (y < 6) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 40;
+		double y = (r * sin(2 * M_PI * i / ngon)) ;
+		if (x < 41) {
+			if (y < 1) {
 				glVertex3f(x, y, 75);
 			}
 		}
-	}glVertex3f(30, 0, 55);
+	}glVertex3f(40, -10, 55);
 	glEnd();
 
 	//pinggir
 	glBegin(GL_POLYGON);
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3f(0.0, 0.0, 0.0);
 	for (int i = 0; i < vertex; i++) {
-		double x = (r * cos(2 * M_PI * i / ngon)) + 30;
-		double y = (r * sin(2 * M_PI * i / ngon)) + 10;
-		if (x < 31) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 100;
+		double y = (r * sin(2 * M_PI * i / ngon));
+		if (x > 99) {
 			glVertex3f(x, y, 55);
 		}
-	}glVertex3f(30, 5, 55);
+	}
 	glEnd();
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < vertex; i++) {
-		double x = (r * cos(2 * M_PI * i / ngon)) + 30;
-		double y = (r * sin(2 * M_PI * i / ngon)) + 10;
-		if (x < 31) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 100;
+		double y = (r * sin(2 * M_PI * i / ngon));
+		if (x > 99.1) {
 			glVertex3f(x, y, 75);
 		}
-	}glVertex3f(30, 5, 75);
+	}
 	glEnd();
-
-
-
-	
-
-	
-
+	//tengah
 	glBegin(GL_POLYGON);
-	glColor4f(91 / 255.0f, 86 / 255.0f, 76 / 255.0f, 100 / 255.0f);
+	glColor3f(0.0, 0.0, 0.0);
+	for (int i = 0; i < vertex; i++) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 100;
+		double y = (r * sin(2 * M_PI * i / ngon));
+		if (x > 99) {
+			if (y > -1) {
+				glVertex3f(x, y, 55);
+			}
+		}
+	}glVertex3f(110, 0, 75);
+	glEnd(); glBegin(GL_POLYGON);
+	for (int i = 0; i < vertex; i++) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 100;
+		double y = (r * sin(2 * M_PI * i / ngon));
+		if (x > 99) {
+			if ((y+1)<0) {
+				glVertex3f(x, y, 55);
+			}
+		}
+	}glVertex3f(110, 0, 75);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glColor3f(0.0, 0.0, 0.0);
+	for (int i = 0; i < vertex; i++) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 100;
+		double y = (r * sin(2 * M_PI * i / ngon));
+		if (x > 99) {
+			if (y > -1) {
+				glVertex3f(x, y, 75);
+			}
+		}
+	}glVertex3f(100, 10, 55);
+	glEnd(); glBegin(GL_POLYGON);
+	for (int i = 0; i < vertex; i++) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 100;
+		double y = (r * sin(2 * M_PI * i / ngon));
+		if (x > 99) {
+			if (y < 0) {
+				glVertex3f(x, y, 75);
+			}
+		}
+	}glVertex3f(100, -10, 55);
+	glEnd();
+	
+	glBegin(GL_POLYGON);
+	glColor4f(0/ 255.0f, 0/ 255.0f, 0/ 255.0f, 100 / 255.0f);
 	glVertex3f(40, -10, 125);
 	glVertex3f(40, -10, 145);
 	glVertex3f(100, -10, 145);
@@ -962,7 +1137,48 @@ void penggaruk(void){
 	glVertex3f(145, 205, 101);
 	glVertex3f(145, 202, 101);
 
-	glColor4f(255/255.0f, 0/255.0f, 0/255.0f, 78/255.0f);
+	glVertex3f(145, 202, 101);
+	glVertex3f(145, 202, 99);
+	glVertex3f(145, 205, 99);
+	glVertex3f(145, 205, 101);
+
+	glVertex3f(72, 40, 101);
+	glVertex3f(72, 40, 99);
+	glVertex3f(72, 43, 99);
+	glVertex3f(72, 43, 101);
+
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
+	glVertex3f(97, 91, 102);
+	glVertex3f(97, 91, 98);
+	glVertex3f(93, 95, 98);
+	glVertex3f(93, 95, 102);
+
+	glVertex3f(129, 161, 102);
+	glVertex3f(129, 161, 98);
+	glVertex3f(125, 165, 98);
+	glVertex3f(125, 165, 102);
+
+	glVertex3f(97, 91, 102);
+	glVertex3f(97, 91, 98);
+	glVertex3f(129, 161, 98);
+	glVertex3f(129, 161, 102);
+
+	glVertex3f(93, 95, 98);
+	glVertex3f(93, 95, 102);
+	glVertex3f(125, 165, 102);
+	glVertex3f(125, 165, 98);
+
+	glVertex3f(97, 91, 98);
+	glVertex3f(93, 95, 98);
+	glVertex3f(125, 165, 98);
+	glVertex3f(129, 161, 98);
+
+	glVertex3f(97, 91, 102);
+	glVertex3f(93, 95, 102);
+	glVertex3f(125, 165, 102);
+	glVertex3f(129, 161, 102);
+
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
 	glVertex3f(75, 33, 98);
 	glVertex3f(75, 33, 102);
 	glVertex3f(80, 43, 102);
@@ -1029,6 +1245,99 @@ void penggaruk(void){
 	glVertex3f(155, 210, 110);
 	glVertex3f(175, 30, 105);
 	glVertex3f(170, 30, 105);
+		
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
+	glVertex3f(155, 190, 98);
+	glVertex3f(155, 190, 102);
+	glVertex3f(161, 185, 102);
+	glVertex3f(161, 185, 98);
+
+	glVertex3f(165, 190, 98);
+	glVertex3f(165, 190, 102);
+	glVertex3f(167, 185, 102);
+	glVertex3f(167, 185, 98);
+
+	glVertex3f(155, 190, 102);
+	glVertex3f(161, 185, 102);
+	glVertex3f(167, 185, 102);
+	glVertex3f(165, 190, 102);
+
+	glVertex3f(155, 190, 98);
+	glVertex3f(161, 185, 98);
+	glVertex3f(167, 185, 98);
+	glVertex3f(165, 190, 98);
+
+	glVertex3f(155, 190, 98);
+	glVertex3f(160, 190, 102);
+	glVertex3f(165, 190, 102);
+	glVertex3f(165, 190, 98);
+
+	glVertex3f(155, 185, 98);
+	glVertex3f(155, 185, 102);
+	glVertex3f(165, 185, 102);
+	glVertex3f(165, 185, 98);
+
+	glColor3f(255/255.0f, 255/255.0f, 255/255.0f);
+	glVertex3f(164, 185, 99);
+	glVertex3f(164, 185, 101);
+	glVertex3f(162, 185, 101);
+	glVertex3f(162, 185, 99);
+
+	glVertex3f(180, 30, 99);
+	glVertex3f(180, 30, 101);
+	glVertex3f(178, 30, 101);
+	glVertex3f(178, 30, 99);
+
+	glVertex3f(164, 185, 99);
+	glVertex3f(164, 185, 101);
+	glVertex3f(180, 30, 101);
+	glVertex3f(180, 30, 99);
+
+	glVertex3f(162, 185, 101);
+	glVertex3f(162, 185, 99);
+	glVertex3f(178, 30, 99);
+	glVertex3f(178, 30, 101);
+
+	glVertex3f(180, 30, 101);
+	glVertex3f(164, 185, 101);
+	glVertex3f(162, 185, 101);
+	glVertex3f(178, 30, 101);
+
+	glVertex3f(180, 30, 99);
+	glVertex3f(164, 185, 99);
+	glVertex3f(162, 185, 99);
+	glVertex3f(178, 30, 99);
+
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
+	glVertex3f(171, 140, 98);
+	glVertex3f(171, 140, 102);
+	glVertex3f(165, 140, 102);
+	glVertex3f(165, 140, 98);
+
+	glVertex3f(178, 75, 98);
+	glVertex3f(178, 75, 102);
+	glVertex3f(172, 75, 102);
+	glVertex3f(172, 75, 98);
+
+	glVertex3f(171, 140, 102);
+	glVertex3f(171, 140, 98);
+	glVertex3f(178, 75, 98);
+	glVertex3f(178, 75, 102);
+
+	glVertex3f(165, 140, 102);
+	glVertex3f(165, 140, 98);
+	glVertex3f(172, 75, 98);
+	glVertex3f(172, 75, 102);
+
+	glVertex3f(171, 140, 102);
+	glVertex3f(178, 75, 102);
+	glVertex3f(172, 75, 102);
+	glVertex3f(165, 140, 102);
+
+	glVertex3f(171, 140, 98);
+	glVertex3f(178, 75, 98);
+	glVertex3f(172, 75, 98);
+	glVertex3f(165, 140, 98);
 
 	glEnd();
 }
@@ -1127,7 +1436,7 @@ void ujung_belakang(double r, int vertex){
 	double ngon = (double)vertex;
 	//samping kanan
 	glBegin(GL_POLYGON);
-	glColor3f(0.6, 0.4, 0.5);
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
 		for (int i = 0; i < vertex; i++) {
 			double z = r * cos(2 * M_PI * i / ngon)+ 130;
 			double y = ((r + (i * 0.00001)) * sin(2 * M_PI * i / ngon)) + 50;
@@ -1139,7 +1448,7 @@ void ujung_belakang(double r, int vertex){
 		}glVertex3f(60,50,130);
 	glEnd();
 	glBegin(GL_POLYGON);
-	glColor3f(0.5, 0.5, 0.5);
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
 		for (int i = 0; i < vertex; i++) {
 			double z = r * cos(2 * M_PI * i / ngon)+ 130;
 			double y = ((r + (i * 0.00001)) * sin(2 * M_PI * i / ngon)) + 50;
@@ -1151,7 +1460,7 @@ void ujung_belakang(double r, int vertex){
 		}glVertex3f(20,50,140);
 	glEnd();
 	glBegin(GL_POLYGON);
-	glColor3f(0.7, 0.5, 0.6);
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
 		for (int i = 0; i < vertex; i++) {
 			double z = r * cos(2 * M_PI * i / ngon)+ 130;
 			double y = ((r + (i * 0.00001)) * sin(2 * M_PI * i / ngon)) + 50;
@@ -1163,7 +1472,7 @@ void ujung_belakang(double r, int vertex){
 		}glVertex3f(20,50,130);
 	glEnd();
 	glBegin(GL_POLYGON);
-	glColor3f(0.5, 0.5, 0.5);
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
 		for (int i = 0; i < vertex; i++) {
 			double z = r * cos(2 * M_PI * i / ngon)+ 130;
 			double y = ((r + (i * 0.00001)) * sin(2 * M_PI * i / ngon)) + 50;
@@ -1177,7 +1486,7 @@ void ujung_belakang(double r, int vertex){
 
 	//samping kiri
 	glBegin(GL_POLYGON);
-	glColor3f(0.6, 0.4, 0.5);
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
 		for (int i = 0; i < vertex; i++) {
 			double z = r * cos(2 * M_PI * i / ngon)+ 70;
 			double y = ((r + (i * 0.00001)) * sin(2 * M_PI * i / ngon)) + 50;
@@ -1189,7 +1498,7 @@ void ujung_belakang(double r, int vertex){
 		}glVertex3f(60,50,70);
 	glEnd();
 	glBegin(GL_POLYGON);
-	glColor3f(0.5, 0.5, 0.5);
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
 		for (int i = 0; i < vertex; i++) {
 			double z = r * cos(2 * M_PI * i / ngon)+ 70;
 			double y = ((r + (i * 0.00001)) * sin(2 * M_PI * i / ngon)) + 50;
@@ -1201,7 +1510,7 @@ void ujung_belakang(double r, int vertex){
 		}glVertex3f(20,50,60);
 	glEnd();
 	glBegin(GL_POLYGON);
-	glColor3f(0.6, 0.4, 0.5);
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
 		for (int i = 0; i < vertex; i++) {
 			double z = r * cos(2 * M_PI * i / ngon)+ 70;
 			double y = ((r + (i * 0.00001)) * sin(2 * M_PI * i / ngon)) + 50;
@@ -1213,7 +1522,7 @@ void ujung_belakang(double r, int vertex){
 		}glVertex3f(20,50,70);
 	glEnd();
 	glBegin(GL_POLYGON);
-	glColor3f(0.5, 0.5, 0.5);
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
 		for (int i = 0; i < vertex; i++) {
 			double z = r * cos(2 * M_PI * i / ngon)+ 70;
 			double y = ((r + (i * 0.00001)) * sin(2 * M_PI * i / ngon)) + 50;
@@ -1225,9 +1534,124 @@ void ujung_belakang(double r, int vertex){
 		}glVertex3f(60,60,70);
 	glEnd();
 }
+void ujung_penggaruk(double r, int vertex){
+	double ngon = (double)vertex;
 
+	glBegin(GL_POLYGON);
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
+	for (int i = 0; i < vertex; i++) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 170;
+		double y = (r * sin(2 * M_PI * i / ngon)) + 15;
+		if (x > 169) {
+			glVertex3f(x, y, 115);
+		}
+	}
+	glEnd();
 
-void akang_gedang(void)
+	glBegin(GL_POLYGON);
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
+	for (int i = 0; i < vertex; i++) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 170;
+		double y = (r * sin(2 * M_PI * i / ngon)) + 15;
+		if (x > 169) {
+			glVertex3f(x, y, 85);
+		}
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
+	for (int i = 0; i < vertex; i++) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 170;
+		double y = (r * sin(2 * M_PI * i / ngon)) + 15;
+		if (x > 169) {
+				if (y>14) {
+					glVertex3f(x, y, 115);
+			}
+		}
+	}glVertex3f(170, 35, 85);
+	glBegin(GL_POLYGON);
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
+	for (int i = 0; i < vertex; i++) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 170;
+		double y = (r * sin(2 * M_PI * i / ngon)) + 15;
+		if (x > 169) {
+				if (y<16) {
+					glVertex3f(x, y, 85);
+			}
+		}
+	}glVertex3f(170, -5, 115);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
+	for (int i = 0; i < vertex; i++) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 170;
+		double y = (r * sin(2 * M_PI * i / ngon)) + 15;
+		if (x > 169) {
+				if (y>14) {
+					glVertex3f(x, y, 85);
+			}
+		}
+	}glVertex3f(190, 15, 115);
+	glBegin(GL_POLYGON);
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
+	for (int i = 0; i < vertex; i++) {
+		double x = (r * cos(2 * M_PI * i / ngon)) + 170;
+		double y = (r * sin(2 * M_PI * i / ngon)) + 15;
+		if (x > 169) {
+				if (y<16) {
+					glVertex3f(x, y, 115);
+			}
+		}
+	}glVertex3f(170, 15, 85);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
+	glVertex3f(170, -5, 85);
+	glVertex3f(170, -5, 115);
+	glVertex3f(190, 15, 115);
+	glVertex3f(190, 15, 85);
+	glEnd();
+}
+void runcing(void){
+	glBegin(GL_POLYGON);
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
+	glVertex3f(170, -5, 85);
+	glVertex3f(165, -5, 87.5);
+	glVertex3f(170, -5, 90);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
+	glVertex3f(170, -5, 90);
+	glVertex3f(165, -5, 92.5);
+	glVertex3f(170, -5, 95);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
+	glVertex3f(170, -5, 95);
+	glVertex3f(165, -5, 97.5);
+	glVertex3f(170, -5, 100);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
+	glVertex3f(170, -5, 100);
+	glVertex3f(165, -5, 102.5);
+	glVertex3f(170, -5, 105);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
+	glVertex3f(170, -5, 105);
+	glVertex3f(165, -5, 107.5);
+	glVertex3f(170, -5, 110);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glColor3f(255/255.0f, 179/255.0f, 0/255.0f);
+	glVertex3f(170, -5, 110);
+	glVertex3f(165, -5, 112.5);
+	glVertex3f(170, -5, 115);
+	glEnd();
+}
+void objek(void)
 {
 
 //adukan semen
@@ -1242,7 +1666,7 @@ void akang_gedang(void)
         //depan
         glBegin(GL_QUADS);
         glColor3f(255/255.0f,209/255.0f,133/255.0f);
-       glVertex3f(-60.0 + 80, -20.0+ 10, -50.0 +250);
+		glVertex3f(-60.0 + 80, -20.0+ 10, -50.0 +250);
         glVertex3f(-60.0 + 80, -13.0+ 10, -50.0 +250);
         glVertex3f(-33.0 + 70, -13.0+ 10, -50.0 +250);
         glVertex3f(-33.0 + 70, -20.0+ 10, -50.0 +250);
@@ -1276,58 +1700,58 @@ void akang_gedang(void)
         glEnd();
 
 
-	//toilet portable 1
+//toilet portable 1
         //belakang
         glBegin(GL_QUADS);
         glColor3f(255/255.0f,144/255.0f,82/255.0f);
-        glVertex3f(-33.0 + 65, -20.0+ 10, -24.9 + +325);
-        glVertex3f(-33.0 + 65, -13.0+ 30, -24.9 +325);
-        glVertex3f(-60.0 + 80, -13.0+ 30, -24.9 +325);
-        glVertex3f(-60.0+ 80, -20.0+ 10, -24.9 +325);
+        glVertex3f(25, -10, 300);
+        glVertex3f(25, 17, 300);
+        glVertex3f(10, 17,300);
+        glVertex3f(10, -10, 300);
         glEnd();
         //depan
         glBegin(GL_QUADS);
         glColor3f(255/255.0f,144/255.0f,82/255.0f);
-       glVertex3f(-60.0 + 80, -20.0+ 10, -50.0 +342);
-        glVertex3f(-60.0 + 80, -13.0+ 30, -50.0 +342);
-        glVertex3f(-33.0 + 65, -13.0+ 30, -50.0 +342);
-        glVertex3f(-33.0 + 65, -20.0+ 10, -50.0 +342);
+       glVertex3f(10, -20.0+ 10,291);
+        glVertex3f(10, -13.0+ 30, 291);
+        glVertex3f(25, -13.0+ 30, 291);
+        glVertex3f(25, -20.0+ 10, 291);
         glEnd();
 
         //kiri
         glBegin(GL_QUADS);
         glColor3f(255/255.0f,144/255.0f,82/255.0f);
-        glVertex3f(-33.0 + 65, -20.0+ 10, -50.0 +342);
-        glVertex3f(-33.0 + 65, -13.0+ 30, -50.0 +342);
-        glVertex3f(-33.0 + 65, -13.0+ 30, -24.9 +325);
-        glVertex3f(-33.0 + 65, -20.0+ 10, -24.9 +325);
+        glVertex3f(25, -20.0+ 10, 291);
+        glVertex3f(25, -13.0+ 30, 291);
+        glVertex3f(25, -13.0+ 30,300);
+        glVertex3f(25, -20.0+ 10, 300);
         glEnd();
 
         //kanan
         glBegin(GL_QUADS);
         glColor3f(255/255.0f,144/255.0f,82/255.0f);
-        glVertex3f(-60.0 + 80, -20.0+ 10, -50.0 +342);
-        glVertex3f(-60.0 + 80, -13.0+ 30, -50.0 +342);
-        glVertex3f(-60.0 + 80, -13.0+ 30, -24.9 +325);
-        glVertex3f(-60.0 + 80, -20.0+ 10, -24.9 +325);
+        glVertex3f(10, -20.0+ 10, 291);
+        glVertex3f(10, -13.0+ 30,291);
+        glVertex3f(10, -13.0+ 30, 300);
+        glVertex3f(10, -20.0+ 10, 300);
         glEnd();
 
         //atas
         glBegin(GL_QUADS);
         glColor3f(255/255.0f,255/255.0f,255/255.0f);
-        glVertex3f(-33.0 + 65, -15.0+ 32, -50.0 +342);
-        glVertex3f(-60.0 + 80, -15.0+ 32, -50.0 +342);
-        glVertex3f(-60.0 + 80, -15.0+ 32, -24.9 +325);
-        glVertex3f(-33.0 + 65, -15.0+ 32, -24.9 +325);
+        glVertex3f(25, -15.0+ 32,291);
+        glVertex3f(10, -15.0+ 32, 291);
+        glVertex3f(10, -15.0+ 32,300);
+        glVertex3f(25, -15.0+ 32,300);
         glEnd();
 //pintu toilet 1
 
 		 glBegin(GL_POLYGON);
     glColor3f(255/255.0f,255/255.0f,255/255.0f);
-    glVertex3f(30,0.0+10,291.5);
-    glVertex3f(22,0.0+10,291.5);
-    glVertex3f(22,-20.0+10,291.5);
-    glVertex3f(30,-20.0+10,291.5);
+    glVertex3f(20,0.0+10,290.5);
+    glVertex3f(14,0.0+10,290.5);
+    glVertex3f(14,-20.0+10,290.5);
+    glVertex3f(20,-20.0+10,290.5);
     glEnd();
 
 
@@ -1335,54 +1759,54 @@ void akang_gedang(void)
         //belakang
         glBegin(GL_QUADS);
         glColor3f(255/255.0f,144/255.0f,82/255.0f);
-        glVertex3f(-33.0 + 85, -20.0+ 10, -24.9 + +325);
-        glVertex3f(-33.0 + 85, -13.0+ 30, -24.9 +325);
-        glVertex3f(-60.0 + 100, -13.0+ 30, -24.9 +325);
-        glVertex3f(-60.0+ 100, -20.0+ 10, -24.9 +325);
+        glVertex3f(50, -20.0+ 10, -24.9 + +325);
+        glVertex3f(50, -13.0+ 30, -24.9 +325);
+        glVertex3f(35, -13.0+ 30, -24.9 +325);
+        glVertex3f(35, -20.0+ 10, -24.9 +325);
         glEnd();
         //depan
         glBegin(GL_QUADS);
         glColor3f(255/255.0f,144/255.0f,82/255.0f);
-       glVertex3f(-60.0 + 100, -20.0+ 10, -50.0 +342);
-        glVertex3f(-60.0 + 100, -13.0+ 30, -50.0 +342);
-        glVertex3f(-33.0 + 85, -13.0+ 30, -50.0 +342);
-        glVertex3f(-33.0 + 85, -20.0+ 10, -50.0 +342);
+       glVertex3f(35, -20.0+ 10, -50.0 +342);
+        glVertex3f(35, -13.0+ 30, -50.0 +342);
+        glVertex3f(50, -13.0+ 30, -50.0 +342);
+        glVertex3f(50, -20.0+ 10, -50.0 +342);
         glEnd();
 
         //kiri
         glBegin(GL_QUADS);
         glColor3f(255/255.0f,144/255.0f,82/255.0f);
-        glVertex3f(-33.0 + 85, -20.0+ 10, -50.0 +342);
-        glVertex3f(-33.0 + 85, -13.0+ 30, -50.0 +342);
-        glVertex3f(-33.0 + 85, -13.0+ 30, -24.9 +325);
-        glVertex3f(-33.0 + 85, -20.0+ 10, -24.9 +325);
+        glVertex3f(50, -20.0+ 10, -50.0 +342);
+        glVertex3f(50, -13.0+ 30, -50.0 +342);
+        glVertex3f(50, -13.0+ 30, -24.9 +325);
+        glVertex3f(50, -20.0+ 10, -24.9 +325);
         glEnd();
 
         //kanan
         glBegin(GL_QUADS);
         glColor3f(255/255.0f,144/255.0f,82/255.0f);
-        glVertex3f(-60.0 + 100, -20.0+ 10, -50.0 +342);
-        glVertex3f(-60.0 + 100, -13.0+ 30, -50.0 +342);
-        glVertex3f(-60.0 + 100, -13.0+ 30, -24.9 +325);
-        glVertex3f(-60.0 + 100, -20.0+ 10, -24.9 +325);
+        glVertex3f(35, -20.0+ 10, -50.0 +342);
+        glVertex3f(35, -13.0+ 30, -50.0 +342);
+        glVertex3f(35, -13.0+ 30, -24.9 +325);
+        glVertex3f(35, -20.0+ 10, -24.9 +325);
         glEnd();
 
         //atas
         glBegin(GL_QUADS);
         glColor3f(255/255.0f,255/255.0f,255/255.0f);
-        glVertex3f(-33.0 + 85, -15.0+ 32, -50.0 +342);
-        glVertex3f(-60.0 + 100, -15.0+ 32, -50.0 +342);
-        glVertex3f(-60.0 + 100, -15.0+ 32, -24.9 +325);
-        glVertex3f(-33.0 + 85, -15.0+ 32, -24.9 +325);
+        glVertex3f(58, -15.0+ 32, -50.0 +342);
+        glVertex3f(35, -15.0+ 32, -50.0 +342);
+        glVertex3f(35, -15.0+ 32, -24.9 +325);
+        glVertex3f(50, -15.0+ 32, -24.9 +325);
         glEnd();
 //pintu toilet 2
 
 		 glBegin(GL_POLYGON);
     glColor3f(255/255.0f,255/255.0f,255/255.0f);
-    glVertex3f(50,10,291.5);
-    glVertex3f(42,10,291.5);
-    glVertex3f(42,-10,291.5);
-    glVertex3f(50,-10,291.5);
+    glVertex3f(46,10,291.5);
+    glVertex3f(40,10,291.5);
+    glVertex3f(40,-10,291.5);
+    glVertex3f(46,-10,291.5);
     glEnd();
 
 	
@@ -1391,16 +1815,16 @@ void akang_gedang(void)
         glBegin(GL_QUADS);
         glColor3f(255/255.0f,255/255.0f,255/255.0f);
         glVertex3f(82, -10, 250);
-        glVertex3f(82, 80,250);
-        glVertex3f(80, 80, 250);
+        glVertex3f(82, 180,250);
+        glVertex3f(80, 180, 250);
         glVertex3f(80, -10, 250);
         glEnd();
         //depan
         glBegin(GL_QUADS);
         glColor3f(255/255.0f,255/255.0f,255/255.0f);
        glVertex3f(80, -10, 252);
-        glVertex3f(80, 80, 252);
-        glVertex3f(82, 80, 252);
+        glVertex3f(80, 180, 252);
+        glVertex3f(82, 180, 252);
         glVertex3f(82, -10, 252);
         glEnd();
 
@@ -1408,8 +1832,8 @@ void akang_gedang(void)
         glBegin(GL_QUADS);
         glColor3f(255/255.0f,255/255.0f,255/255.0f);
         glVertex3f(82, -10, 252);
-        glVertex3f(82, 80, 252);
-        glVertex3f(82, 80,250);
+        glVertex3f(82, 180, 252);
+        glVertex3f(82, 180,250);
         glVertex3f(82, -10, 250);
         glEnd();
 
@@ -1417,42 +1841,10 @@ void akang_gedang(void)
         glBegin(GL_QUADS);
         glColor3f(255/255.0f,255/255.0f,255/255.0f);
         glVertex3f(80, -10, 250);
-        glVertex3f(80, 80, 250);
-        glVertex3f(80, 80, 252);
+        glVertex3f(80, 180, 250);
+        glVertex3f(80, 180, 252);
         glVertex3f(80, -10, 252);
         glEnd();
-
-       //atas
-        glBegin(GL_QUADS);
-        glColor3f(255/255.0f,255/255.0f,255/255.0f);
-        glVertex3f(-33.0 + 85, -15.0+ 32, -50.0 +342);
-        glVertex3f(-60.0 + 100, -15.0+ 32, -50.0 +342);
-        glVertex3f(-60.0 + 100, -15.0+ 32, -24.9 +325);
-        glVertex3f(-33.0 + 85, -15.0+ 32, -24.9 +325);
-        glEnd();
-
-		
-
-		//bendera1
-glBegin(GL_POLYGON);
-glColor3f(255/255.0f,0/255.0f,0/255.0f);
-glVertex3f(82,70,250);
-glVertex3f(102,70,252);
-glVertex3f(102,80,252);
-glVertex3f(82,80,250);
-glEnd();
-
-//bendera2
-glBegin(GL_POLYGON);
-glColor3f(255/255.0f,255/255.0f,255/255.0f);
-glVertex3f(82,60,250);
-glVertex3f(102,60,252);
-glVertex3f(102,70,252);
-glVertex3f(82,70,250);
-glEnd();
-
-
-
 
 // atap kursi mandor
       
@@ -1506,35 +1898,35 @@ glEnd();
         //kiri
         glBegin(GL_QUADS);
         glColor3f(133/255.0f,88/255.0f,14/255.0f);
-        glVertex3f(102, -10.0, -30.0);
-        glVertex3f(102,  0.0, -30.0);
-        glVertex3f(102,  0.0, -40.0);
-        glVertex3f(102, -10.0, -40.0);
+        glVertex3f(102, -10.0,293.0);
+        glVertex3f(102, 0.0, 293.0);
+        glVertex3f(102, 0.0, 298.0);
+        glVertex3f(102, -10.0, 298.0);
         glEnd();
 
         //kanan
         glBegin(GL_QUADS);
         glColor3f(133/255.0f,88/255.0f,14/255.0f);
-        glVertex3f(142, -10.0, -30.0);
-        glVertex3f(142, 0.0, -30.0);
-        glVertex3f(142, 0.0, -40.0);
-        glVertex3f(142, -10.0, -40.0);
+        glVertex3f(140, -10.0, 293);
+        glVertex3f(140, 0, 293);
+        glVertex3f(140, 0, 298);
+        glVertex3f(140, -10.0, 298);
         glEnd();
 
         //atas
         glBegin(GL_QUADS);
         glColor3f(193/255.0f,190/255.0f,185/255.0f);
-        glVertex3f(142, -3.0, -30.0);
-        glVertex3f(100, -3.0, -30.0);
-        glVertex3f(100, -3.0, -40.0);
-        glVertex3f(142, -3.0, -40.0);
+        glVertex3f(140, -3.0, 293);
+        glVertex3f(102, -3.0, 293);
+        glVertex3f(102, -3.0, 298);
+        glVertex3f(140, -3.0, 298);
         glEnd();
 
 
 
 
 
-		
+
 float ax = 40; float ay = 200;
     float bx = 38; float by = 202;
     float cx = 36; float cy = 200;
@@ -1609,27 +2001,55 @@ float ax = 40; float ay = 200;
     glEnd();
 
 	}
-
-
-  
-
+void twenning(void){
+	/*glLineWidth(4.0);
+		int x1 = 10;
+		float StartShape[5][3] = { {82,170,250},{102,170,250},{102,180,250},{82,180,250},{82,160,250},{102,160,250},{102,170,250},{82,170,250} };
+		float EndShape[5][3] = { {82,170,250+x1},{102,170,250+x1},{102,180,250+x1},{82,180,250+x1},{82,160,250+x1},{102,160,250+x1},{102,170,250+x1},{82,170,250+x1} };
+		float IntermediateShape[5][2];
+		/*float VertexColors[12][3] = { {1,0,0},{1,1,0},{1,0,1},{0,1,0},{0,1,1},{0,0,1},{1,0.5,0},{1,0,0.5},{0.5,1,0},
+		{0.5,0,1}, {1,0,0.5},{0,1,0.5} };
+		static float Tween = 0.0 - deltat;
+		if (Tween < 1)
+		{
+			Tween += deltat;
+		}
+		for (int Vtx = 0; Vtx < 5; Vtx++)
+		{
+			IntermediateShape[Vtx][0] = (1.0 - Tween) * StartShape[Vtx][0] + Tween * EndShape[Vtx][0];
+			IntermediateShape[Vtx][1] = (1.0 - Tween) * StartShape[Vtx][1] + Tween * EndShape[Vtx][1];
+		}
+		glVertexPointer(2, GL_FLOAT, 0, IntermediateShape);
+		//glColorPointer(3, GL_FLOAT, 0, VertexColors);
+		for (int i = 0; i < 10000; i++);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glDrawArrays(GL_LINE_LOOP, 0, 5);
+		glutPostRedisplay();*/
 	
+	
+	//bendera1
+	glBegin(GL_POLYGON);
+	glColor3f(255/255.0f,0/255.0f,0/255.0f);
+	glVertex3f(82,170,250);
+	glVertex3f(102,170,250);
+	glVertex3f(102,180,250);
+	glVertex3f(82,180,250);
+	glEnd();
 
-
-
-
-
+	//bendera2
+	glBegin(GL_POLYGON);
+	glColor3f(255/255.0f,255/255.0f,255/255.0f);
+	glVertex3f(82,160,250);
+	glVertex3f(102,160,250);
+	glVertex3f(102,170,250);
+	glVertex3f(82,170,250);
+	glEnd();	
+}
 void display(void) {
-	
-	
 	if (is_depth)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	
 	else 
 	glClear(GL_COLOR_BUFFER_BIT);
-
-	
 
 	glBegin(GL_QUADS);
 	glColor3f(157/255.0f, 129/255.0f, 100/255.0f);
@@ -1637,8 +2057,8 @@ void display(void) {
 	glVertex3f(300, -10, 0);
 	glVertex3f(0, -10, 0);
 	glVertex3f(0, -10, 300);
-
 	glEnd();
+
 	ujung_atas(5, 40);
 	body();
 	pengendali();
@@ -1646,9 +2066,10 @@ void display(void) {
 	penggaruk();
 	kaca();
 	ujung_belakang(10, 40);
-	akang_gedang();
-	
-
+	ujung_penggaruk(20,40);
+	runcing();
+	objek();
+	twenning();
 
 	glPushMatrix();
 	glPopMatrix();
@@ -1659,13 +2080,13 @@ void keyboard(unsigned char key, int x, int y) {
 	case 'w' :
 		glTranslatef(0.0, 0.0, 3.0);
 		break;
-	case 'd':
+	case 'a':
 		glTranslatef(-3.0, 0.0, 0.0);
 		break;
 	case 's':
 		glTranslatef(0.0, 0.0, -3.0);
 		break;
-	case 'a':
+	case 'd':
 		glTranslatef(3.0, 0.0, 0.0);
 		break;
 	case 'q':
@@ -1714,9 +2135,24 @@ void ukuran(int lebar, int tinggi) {
 	glMatrixMode(GL_MODELVIEW);
 }
 void myinit() {
-	glClearColor(0.0, 0.0, 0.0, 0.0);
+	
+
+	glShadeModel(GL_SMOOTH);
+	glMaterialfv(GL_FRONT,GL_SPECULAR,mat_specular);
+	glMaterialfv(GL_FRONT,GL_SHININESS,mat_shininess);
+	glLightfv(GL_LIGHT0,GL_POSITION,light_position);
+	glLightfv(GL_LIGHT1,GL_SPECULAR,light_specular);
+	glLightfv(GL_LIGHT1,GL_DIFFUSE,light_diffuse);
+
+
+	//glEnable(GL_LIGHTING);
+	//glEnable(GL_LIGHT0);
+	//glEnable(GL_NORMALIZE);
+	//glEnable(GL_DEPTH_TEST);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glClearColor(0.1, 0.0, 0.0, 0.0);
 	glMatrixMode(GL_PROJECTION);
-	glEnable(GL_DEPTH_TEST);
 	is_depth = 1;
 	glMatrixMode(GL_MODELVIEW);
 }
